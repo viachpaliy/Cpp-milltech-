@@ -8,6 +8,37 @@ int main(int argc, char** argv) {
         std::cerr << "usage: ugv_odometry <input_path>\n";
         return 1;
     }
+    std::string filename = argv[1];
+ 
+    std::ifstream file(filename);
+
+    if (!file.is_open()) return 1;
+
+    // Рахуємо кількість рядків
+    int lines_count = 0;
+    std::string temp;
+    while (std::getline(file, temp)) {
+        if (!temp.empty()) lines_count++;
+    }
+
+    // Повертаємося на початок файлу
+    file.clear(); 
+    file.seekg(0);
+
+    // Створюємо 5 масивів
+    long* timestamp_ms = new long[lines_count];
+    long* fl_ticks = new long[lines_count];
+    long* fr_ticks = new long[lines_count];
+    long* bl_ticks = new long[lines_count];
+    long* br_ticks = new long[lines_count];
+
+    // Зчитуємо дані
+    for (int i = 0; i < lines_count; ++i) {
+        file >> timestamp_ms[i] >> fl_ticks[i] >> fr_ticks[i] >> bl_ticks[i] >> br_ticks[i];
+    }
+
+  // Закриваємо файл
+   file.close();
 
     // TODO: implement wheel odometry for a 4-wheel differential-drive UGV.
     //
