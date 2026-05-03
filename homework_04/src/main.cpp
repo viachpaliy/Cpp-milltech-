@@ -52,5 +52,7 @@ int main(int argc, char** argv) {
     // Output: same tabular format on stdout, starting from the second sample:
     //         timestamp_ms x y theta
 
+ //  Очищення пам'яті
+    delete[] timestamp_ms; delete[] fl_ticks; delete[] fr_ticks; delete[] bl_ticks; delete[] br_ticks;
     return 0;
 }
