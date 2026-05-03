@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <cmath>
+#include <iomanip>
 
 int main(int argc, char** argv) {
     if (argc != 2) {
