@@ -40,17 +40,51 @@ int main(int argc, char** argv) {
   // Закриваємо файл
    file.close();
 
-    // TODO: implement wheel odometry for a 4-wheel differential-drive UGV.
-    //
+ 
     // Parameters:
     int  ticks_per_revolution = 1024;
     double   wheel_radius_m       = 0.3;
     double   wheelbase_m          = 1.0;
     //
-    // Input:  text file with 5 whitespace-separated numbers per line:
-    //         timestamp_ms fl_ticks fr_ticks bl_ticks br_ticks
-    // Output: same tabular format on stdout, starting from the second sample:
-    //         timestamp_ms x y theta
+	double x = 0;
+	double y = 0;
+	double theta = 0;
+
+	for (int i = 1; i < lines_count; i++)
+	{
+		// Delta iмпульсiв по кожному колесу:
+		int d_fl = fl_ticks[i] - fl_ticks[i - 1];
+		int d_fr = fr_ticks[i] - fr_ticks[i - 1];
+		int d_bl = bl_ticks[i] - bl_ticks[i - 1];
+		int d_br = br_ticks[i] - br_ticks[i - 1];
+
+		// Усереднити борти
+		double d_left = (d_fl + d_bl) / 2;
+		double d_right = (d_fr + d_br) / 2;
+
+		//Перевести iмпульси у метри:
+
+		double distance_per_tick = 2 * M_PI * wheel_radius_m / ticks_per_revolution;
+		double dL = d_left * distance_per_tick;
+		double dR = d_right * distance_per_tick;
+
+		//Скiльки пройшов центр робота i на скiльки повернувся:
+
+		double d = (dL + dR) / 2; // пройдена вiдстань центру
+
+		double dtheta = (dR - dL) / wheelbase_m; // змiна орiєнтацiї
+
+		//Оновлення позицiї:
+		x += d * cos(theta + dtheta / 2);
+		y += d * sin(theta + dtheta / 2);
+		theta += dtheta;
+		std::cout << "\t" << std::left ;
+		std::cout<< std::setw(10)  << timestamp_ms[i];
+		std::cout  << std::setw(10) << x ; 
+		std::cout  << std::setw(10) << y ; 
+		std::cout  << std::setw(10) << theta << std::endl;
+	}
+
 
  //  Очищення пам'яті
     delete[] timestamp_ms; delete[] fl_ticks; delete[] fr_ticks; delete[] bl_ticks; delete[] br_ticks;
