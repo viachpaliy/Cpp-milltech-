@@ -17,6 +17,15 @@ jobs:
       - name: Build Project
         working-directory: ./homework_05
         run: cmake --build build --config Release
+      - name: Verify Build
+        working-directory: ./homework_05
+        run: |
+          if [ ! -f "./build/telemetry_check" ]; then
+            echo "❌ Помилка: Виконуваний файл telemetry_check не знайдено в папці build!"
+            echo "Перевірте назву в add_executable() у CMakeLists.txt"
+            exit 1
+          fi
+          echo "✅ Файл telemetry_check успішно 
 
       - name: Process Files
         working-directory: ./homework_05
