@@ -17,6 +17,7 @@ jobs:
       - name: Build Project
         working-directory: ./homework_05
         run: cmake --build build --config Release
+
       - name: Verify Build
         working-directory: ./homework_05
         run: |
