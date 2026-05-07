@@ -21,7 +21,7 @@ jobs:
       - name: Verify Build
         working-directory: ./homework_05
         run: |
-          if [ ! -f "./build/telemetry_check" ]; then
+          if [ ! -f "./build/homework_05/telemetry_check" ]; then
             echo "❌ Помилка: Виконуваний файл telemetry_check не знайдено в папці build!"
             echo "Перевірте назву в add_executable() у CMakeLists.txt"
             exit 1
@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           # Назва вашого виконуваного файлу
-          EXE="./build/telemetry_check"
+          EXE="./build/homework_05/telemetry_check"
           # Шлях до папки з даними (відносно homework_05)
           DATA_DIR="./data"
 
