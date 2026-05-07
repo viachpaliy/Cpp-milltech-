@@ -11,7 +11,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure CMake
-        # Вказуємо шлях до папки проекту
         working-directory: ./homework_05
         run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
@@ -23,6 +22,28 @@ jobs:
         working-directory: ./homework_05
         shell: bash
         run: |
+          # Назва вашого виконуваного файлу
+          EXE="./build/telemetry_check"
+          # Шлях до папки з даними (відносно homework_05)
+          DATA_DIR="./data"
+
+          echo "🚀 Починаємо перевірку телеметрії..."
+          
+          if [ ! -d "$DATA_DIR" ]; then 
+            echo "❌ Помилка: Папка $DATA_DIR не знайдена в $(pwd)"
+            exit 1
+          fi
+
+          for file in "$DATA_DIR"/*; do
+            if [ -f "$file" ]; then
+              echo "--- Обробка файлу: $file ---"
+              # Запуск програми з передачею файлу як аргументу
+              $EXE "$file" || { echo "❌ Програма впала на файлі $file"; exit 1; }
+            fi
+          done
+          
+          echo "✅ Перевірку завершено: всі файли оброблені без помилок!"
+
           # Шлях до бінарного файлу
           EXE="./build/telemetry_check"
           # Шлях до папки з вхідними даними
