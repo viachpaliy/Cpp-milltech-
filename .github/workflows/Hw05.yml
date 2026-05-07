@@ -26,7 +26,7 @@ jobs:
             echo "Перевірте назву в add_executable() у CMakeLists.txt"
             exit 1
           fi
-          echo "✅ Файл telemetry_check успішно 
+          echo "✅ Файл telemetry_check успішно" 
 
       - name: Process Files
         working-directory: ./homework_05
