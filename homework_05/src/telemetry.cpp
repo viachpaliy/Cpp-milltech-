@@ -68,7 +68,11 @@ Frame parse_frame(char line[]) {
     char* fields[EXPECTED_FIELD_COUNT] = {};
     const int field_count = split_line(line, fields, EXPECTED_FIELD_COUNT);
     (void)field_count;
-
+if (field_count != EXPECTED_FIELD_COUNT) {
+        std::cerr << "error: expected " << EXPECTED_FIELD_COUNT 
+                  << " fields, got " << field_count << '\n';
+        std::abort();
+    
     Frame frame{};
     frame.timestamp_ms = parse_long(fields[0]);
     frame.seq = parse_int(fields[1]);
