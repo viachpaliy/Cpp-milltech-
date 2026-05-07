@@ -1,9 +1,9 @@
-name: C++ Smoke Test
+name: Homework 05 Test
 
 on: [push, pull_request]
 
 jobs:
-  build-and-test:
+  build-and-run:
     runs-on: ubuntu-latest
 
     steps:
@@ -11,13 +11,38 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure CMake
-        # Якщо проект у папці, наприклад "my_project", додайте -S my_project -B build
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        # Вказуємо шлях до папки проекту
+        working-directory: ./homework_05
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
-      - name: Build project
+      - name: Build Project
+        working-directory: ./homework_05
         run: cmake --build build --config Release
 
-      - name: Run tests on data files
+      - name: Process Files
+        working-directory: ./homework_05
+        shell: bash
+        run: |
+          # Шлях до бінарного файлу (змініть 'main' на ім'я вашої програми)
+          EXE="./build/main"
+          # Шлях до папки з вхідними даними
+          DATA_DIR="./input_data"
+
+          echo "🚀 Починаємо перевірку файлів..."
+          
+          # Перевіряємо чи існує файл та папка
+          if [ ! -d "$DATA_DIR" ]; then echo "Папка $DATA_DIR не знайдена!"; exit 1; fi
+
+          for file in "$DATA_DIR"/*; do
+            if [ -f "$file" ]; then
+              echo "--- Обробка: $file ---"
+              # Запуск. Якщо програма "впаде", скрипт зупиниться і CI засвітиться червоним
+              $EXE "$file" || { echo "❌ Помилка при обробці $file"; exit 1; }
+            fi
+          done
+          
+          echo "✅ Всі файли успішно оброблені!"
+
         shell: bash
         run: |
           # Шлях до вашого exe (змініть 'my_app' на назву з CMakeLists.txt)
