@@ -23,10 +23,10 @@ jobs:
         working-directory: ./homework_05
         shell: bash
         run: |
-          # Шлях до бінарного файлу (змініть 'main' на ім'я вашої програми)
-          EXE="./build/main"
+          # Шлях до бінарного файлу
+          EXE="./build/telemetry_check"
           # Шлях до папки з вхідними даними
-          DATA_DIR="./input_data"
+          DATA_DIR="./homework_05/data"
 
           echo "🚀 Починаємо перевірку файлів..."
           
