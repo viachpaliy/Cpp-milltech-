@@ -1,0 +1,39 @@
+name: C++ Smoke Test
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure CMake
+        # Якщо проект у папці, наприклад "my_project", додайте -S my_project -B build
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build project
+        run: cmake --build build --config Release
+
+      - name: Run tests on data files
+        shell: bash
+        run: |
+          # Шлях до вашого exe (змініть 'my_app' на назву з CMakeLists.txt)
+          EXE_PATH="./build/my_app"
+          # Шлях до папки з даними
+          DATA_DIR="./data_folder"
+
+          echo "Starting tests..."
+          
+          for file in "$DATA_DIR"/*; do
+            if [ -f "$file" ]; then
+              echo "Testing: $file"
+              # Запуск. Якщо програма поверне код не 0, CI зупиниться з помилкою
+              $EXE_PATH "$file" || { echo "Failed on $file"; exit 1; }
+            fi
+          done
+          
+          echo "All files processed successfully!"
+          
