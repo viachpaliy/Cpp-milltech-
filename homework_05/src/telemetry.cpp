@@ -67,8 +67,12 @@ double parse_double(const char* text) {
 Frame parse_frame(char line[]) {
     char* fields[EXPECTED_FIELD_COUNT] = {};
     const int field_count = split_line(line, fields, EXPECTED_FIELD_COUNT);
-    (void)field_count;
-
+    //(void)field_count;
+if (field_count != EXPECTED_FIELD_COUNT) {
+        std::cerr << "error: expected " << EXPECTED_FIELD_COUNT 
+                  << " fields, got " << field_count << '\n';
+        std::abort();
+    }
     Frame frame{};
     frame.timestamp_ms = parse_long(fields[0]);
     frame.seq = parse_int(fields[1]);
@@ -82,8 +86,11 @@ Frame parse_frame(char line[]) {
 
 double compute_frame_rate_hz(const Frame frames[], int frame_count) {
     const long elapsed_ms = frames[frame_count - 1].timestamp_ms - frames[0].timestamp_ms;
-
-    return static_cast<double>((frame_count - 1) * 1000 / elapsed_ms);
+if (elapsed_ms <= 0) {
+        std::cerr << "error: invalid time delta\n";
+        return 0.0;
+    }
+return static_cast<double>(frame_count - 1) * 1000.0 / static_cast<double>(elapsed_ms);
 }
 
 int read_frames(const char* path, Frame frames[], int max_frames) {
@@ -112,6 +119,10 @@ int read_frames(const char* path, Frame frames[], int max_frames) {
 
 Summary summarize(const Frame frames[], int frame_count) {
     Summary summary{};
+    if (frame_count == 0) {
+        std::cerr << "error: no frames to summarize\n";
+        return summary;
+    }
     summary.frames_total = frame_count;
     summary.frames_valid = frame_count;
     summary.voltage_min = frames[0].voltage_v;
