@@ -86,7 +86,10 @@ if (field_count != EXPECTED_FIELD_COUNT) {
 
 double compute_frame_rate_hz(const Frame frames[], int frame_count) {
     const long elapsed_ms = frames[frame_count - 1].timestamp_ms - frames[0].timestamp_ms;
-
+if (elapsed_ms <= 0) {
+        std::cerr << "error: invalid time delta\n";
+        return 0.0;
+    }
 return static_cast<double>(frame_count - 1) * 1000.0 / static_cast<double>(elapsed_ms);
 }
 
